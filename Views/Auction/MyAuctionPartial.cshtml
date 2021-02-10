@@ -1,0 +1,60 @@
+@using AuctionApp.Models.Database
+@model IList<Auction> 
+
+
+<div class="row">
+    @if(Model == null)
+    {
+        <h3>You have no auctions!</h3>
+    }else{
+
+    
+@foreach (var item in Model)
+{
+    var base64Data = Convert.ToBase64String ( item.image );
+    var price = item.startPrice+item.bidAmount;
+    <div class="col-xl-3">
+        <div class="card">
+            <div class = "card-header"><a asp-controller = "Auction" asp-action="Details" asp-route-id='@item.id'>@item.name</a></div>
+            <div class = "card-body">
+                <img src="data:image/png;base64,@base64Data" style="width:180px;height:180px"/>
+                Current price: @price
+                Creation date: @item.dateCreate
+                Opening date: @item.dateOpen
+                Expiration date: @item.dateExpire
+                @item.state
+            </div>
+                @if(item.state == "DRAFT")
+            {
+                <div class='card-footer'>
+                <a class='float-left'><button onclick='deleteAuction(@item.id)' class="btn btn-outline-danger">Delete</button></a>
+                <a asp-controller = "Auction" asp-action = "Edit" asp-route-id="@item.id" class='float-right'><button class="btn btn-outline-primary">Edit</button></a>
+                </div>
+            }
+        </div>
+    </div>
+}}
+</div>
+
+<script>
+
+    function deleteAuction(id)
+    {
+            var verificationToken = $("input[name='__RequestVerificationToken']").val ( )
+          $.ajax ({
+                        type: "POST",
+                        url: "/Auction/Delete",
+                        data: {
+                            "id" : id,
+                            "__RequestVerificationToken" : verificationToken
+                        },
+                        success: function ( response ) {
+                           updateAuctions(num);
+                        },
+                        error: function ( response ) {
+                            alert(response)
+                        }
+                    })
+    }
+    
+</script>

@@ -1,0 +1,22 @@
+@using AuctionApp.Models.Database
+@model Int32
+
+<div id="auctionList">
+
+</div>
+
+
+<script>
+    var auctions = parseInt(JSON.parse('@Html.Raw(Json.Serialize(Model))'));
+
+    // num je 0 pa onda on nista ne izvuce
+    console.log(num);
+
+    updateAllAuctions(num);
+
+    var numOfAuctions = localStorage.getItem("Num");
+
+    $("document").ready(function () {
+        if (auctions <= numOfAuctions) $("#next").attr("disabled", true);
+    })
+</script>

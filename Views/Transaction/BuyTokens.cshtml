@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "Buy tokens";
+}
+
+<h1>Buy tokens </h1>
+
+<script
+    src="https://www.paypal.com/sdk/js?client-id=AZxkru10eJjO8sXCyI0GLfpDoty4gogH1Kwu2kj06PYonhaqywxYwCh49lYHrRoVt2PJhAepyIkBekOy">
+    </script>
+
+<div id="message" class='text-danger text-center'></div>
+
+<div class="col-xl-4">
+    <a class="nav-link text-dark" asp-controller="Transaction" asp-action="TransactionList"><button
+            class='btn btn-outline-primary w-100'>Previous transactions</button></a>
+</div>
+
+
+<div class="row">
+    <div class="col-xl-8">
+        <form>
+            <div class="form-group">
+                <label>Choose amount</label>
+                <select class="form-control" id="tokens">
+                    <option value=5>Silver - 5</option>
+                    <option value=10>Gold - 10</option>
+                    <option value=20>
+                        Platinium - 20</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="paypal"></div>
+
+<script>
+    paypal.Buttons({
+        createOrder: function (data, actions) {
+            var tokens = $("#tokens").val()
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: tokens
+                    }
+                }]
+            })
+        },
+        onApprove: function (data, actions) {
+            var tokens = $("#tokens").val()
+            var verificationToken = $("input[name='__RequestVerificationToken']").val()
+            return actions.order.capture().then(
+                function (details) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Transaction/Create",
+                        data: {
+                            "tokens": tokens,
+                            "__RequestVerificationToken": verificationToken
+                        },
+                        success: function (response) {
+                            $("#message").text("Transakcija je uspela, dodato " + tokens + " tokena na nalog!")
+                        },
+                        error: function (response) {
+                            $("#message").text("Transakcija nije uspela!")
+                        }
+                    })
+
+                }
+            )
+        },
+        onCancel: function (data) {
+            console.log("Transaction cancelled")
+        },
+        onError: function (err) {
+            console.log(err)
+        }
+    }).render("#paypal");
+</script>

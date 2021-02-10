@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>Auctions</h1>
+Name: <input class="form-control" type="text" placeholder="Search" aria-label="Search" id="wordSearch">
+Min price: <input class="form-control" type="number" value="0" id="minSearch" />
+Max price: <input class="form-control" type="number" value="0" id="maxSearch" />
+Status:
+<select class="form-control" id="stateSearch">
+    <option selected>ANY</option>
+    <option>DRAFT</option>
+    <option>READY</option>
+    <option>OPEN</option>
+    <option>SOLD</option>
+    <option>EXPIRED</option>
+</select>
+Number of auctions:
+<select class="form-control" id="numOfAuctions">
+    <option selected>ANY</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+    <option>7</option>
+    <option>8</option>
+</select>
+<br />
+<button class="btn btn-outline-secondary" onclick="updateIndex()">Search</button>
+<hr />
+
+<div id="allAuctions">
+
+</div>
+
+<div class="row">
+    <div class="col-xl-5">
+        <button disabled onclick="prevPage()" class="btn btn-secondary float-left" id="prev">Previous</button>
+    </div>
+    <div class="col-xl-5">
+        <button disabled onclick="nextPage()" class="btn btn-secondary float-right" id="next">Next</button>
+    </div>
+</div>
+
+<script>
+    function updateIndex() {
+
+        console.log("Usao u updateIndex");
+        var words = $("#wordSearch").val();
+        var min = $("#minPrice").val();
+        var max = $("#maxPrice").val();
+        var state = $("#stateSearch").val();
+        var numOfAuctions = $("#numOfAuctions").val();
+
+        $.ajax({
+            type: "GET",
+            url: "/Auction/updateIndex",
+            dataType: "text",
+            data: {
+                words: words,
+                min: min,
+                max: max,
+                state: state,
+                numOfAuctions: numOfAuctions,
+            },
+            success: function (response) {
+                $("#allAuctions").html(response)
+            },
+            error: function (response) {
+                alert(response)
+            }
+        })
+    }
+
+    var num = 0;
+    var numOfAuctions = localStorage.getItem("Num");
+
+    function nextPage() {
+        console.log(numOfAuctions);
+        if ((num + 1) * numOfAuctions > auctions) return;
+        num++;
+        $("#prev").attr("disabled", false);
+        if ((num + 1) * numOfAuctions > auctions) $("#next").attr("disabled", true);
+        // ovo ubacujes kad ubacis hub znaci pon ujutru!!! 
+        //connection.invoke("UpdateAuctions", "all").catch(handleError);
+    }
+
+    function prevPage() {
+        if (num == 0) return;
+        num--;
+        $("#next").attr("disabled", false);
+        if (num == 0) $("#prev").attr("disabled", true);
+        // i ovo ubacis kad hub dodas jer do tad nece imati funkciju nikakvu
+        //connection.invoke("UpdateAuctions", "all").catch(handleError)
+    }
+</script>

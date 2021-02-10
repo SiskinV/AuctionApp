@@ -1,0 +1,66 @@
+@using Microsoft.AspNetCore.Identity
+@using AuctionApp.Models.Database
+@using System.Security.Claims
+@inject SignInManager<User> signInManager
+
+@{
+    string fullName = "";
+    foreach (Claim claim in User.Claims)
+    {
+        if (claim.Type.Equals("fullName"))
+        {
+            fullName = claim.Value;
+            break;
+        }
+    }
+}
+
+<ul class="navbar-nav">
+    @if (signInManager.IsSignedIn(User))
+    {
+        @if(User.IsInRole("User")){
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Welcome @fullName</a>
+        </li>
+        }else{
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Welcome @fullName</a>
+        </li>
+        }
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="User" asp-action="Details">Details</a>
+        </li>
+
+        @if(User.IsInRole("User")){
+
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Auction" asp-action="Create">Create auction</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Auction" asp-action="MyAuctions">My auctions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Transaction" asp-action="BuyTokens">Buy tokens</a>
+            </li>
+        }else{
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Admin" asp-action="UserList">User list</a>
+            </li>
+        }
+        <li class="nav-item">
+            <form class="form-inline" asp-controller="User" asp-action="LogOut">
+                <input type="submit" class="nav-link btn btn-link text-info" value="Log out" />
+            </form>
+        </li>
+    }
+    else
+    {
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="User" asp-action="LogIn">Log in</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="User" asp-action="Register">Register</a>
+        </li>
+    }
+</ul>

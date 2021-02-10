@@ -1,0 +1,80 @@
+@using AuctionApp.Models.Database
+@model IList<Auction> 
+
+<div class="row">
+    @if(Model == null)
+    {
+        <h3> No Drafted auctions!</h3>
+    }
+    else{
+@foreach (var item in Model)
+{
+    var base64Data = Convert.ToBase64String ( item.image );
+    var price = item.startPrice+item.bidAmount;
+    <div class="col-xl-3">
+        <div class="card">
+            <div class = "card-header"><a asp-controller = "Auction" asp-action="Details" asp-route-id='@item.id'>@item.name</a></div>
+            <div class = "card-body">
+                <img src="data:image/png;base64,@base64Data" style="width:180px;height:180px"/>
+                Current price: @price
+                Creation date: @item.dateCreate
+                Opening date: @item.dateOpen
+                Expiration date: @item.dateExpire
+                @item.state
+            </div>
+                <div class='card-footer'>
+                <a class='float-left'><button onclick='deleteAuction(@item.id)' class="btn btn-outline-danger" >Delete</button></a>
+                <a  class='float-right'><button onclick='approveAuction(@item.id)' class="btn btn-outline-primary">Approve</button></a>
+                </div>
+        </div>
+    </div>
+}}
+    </div>
+
+
+<script>
+    //invoke();
+    function deleteAuction(id)
+    {
+            var verificationToken = $("input[name='__RequestVerificationToken']").val ( )
+          $.ajax ({
+                        type: "POST",
+                        url: "/Auction/Delete",
+                        data: {
+                            "id" : id,
+                            "__RequestVerificationToken" : verificationToken
+                        },
+                        success: function ( response ) {
+                            //ovaj treba da se upali
+                            //invoke();
+                           updateDrafts(num);
+                        },
+                        error: function ( response ) {
+                            alert(response)
+                        }
+                    })
+    }
+
+     function approveAuction(id)
+    {
+            var verificationToken = $("input[name='__RequestVerificationToken']").val ( )
+          $.ajax ({
+                        type: "POST",
+                        url: "/Auction/Approve",
+                        data: {
+                            "id" : id,
+                            "__RequestVerificationToken" : verificationToken
+                        },
+                        success: function ( response ) {
+                            //ovaj ovde isto treba da se upali
+                            console.log("Stigo do invoke");
+                            //invoke();
+                           updateDrafts(num);
+                        },
+                        error: function ( response ) {
+                            alert(response)
+                        }
+                    })
+    }
+    
+</script>

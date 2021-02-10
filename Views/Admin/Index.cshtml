@@ -1,0 +1,56 @@
+@model Int32
+
+@{
+    ViewData["Title"] = "Admin Index";
+}
+
+<h1>User auctions</h1>
+
+<script>
+    var auctions = parseInt(JSON.parse('@Html.Raw(Json.Serialize(Model))'));
+    var num = 0;
+    $("document").ready(function () {
+        if (auctions <= 12) $("#next").attr("disabled", true);
+        updateDrafts(num);
+    })
+
+
+    function nextPage() {
+        if ((num + 1) * 12 > auctions) return;
+        num++;
+        $("#prev").attr("disabled", false);
+        if ((num + 1) * 12 > auctions) $("#next").attr("disabled", true);
+        //connection.invoke("UpdateAuctions", "all").catch(handleError);
+        updateDrafts(num);
+    }
+
+    function prevPage() {
+        if (num == 0) return;
+        num--;
+        $("#next").attr("disabled", false);
+        if (num == 0) $("#prev").attr("disabled", true);
+        // connection.invoke("UpdateAuctions", "all").catch(handleError);
+        updateDrafts(num);
+    }
+
+</script>
+
+<div class="row">
+    <div class="col-xl-10" id="auctions">
+
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-xl-5">
+        <button disabled onclick="prevPage()" class='btn btn-secondary float-left' id='prev'>
+            Previous
+        </button>
+
+    </div>
+    <div class="col-xl-5">
+        <button onclick="nextPage()" class='btn btn-secondary float-right' id='next'>
+            Next
+        </button>
+    </div>
+</div>

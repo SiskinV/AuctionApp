@@ -1,0 +1,15 @@
+@using AuctionApp.Models.Database
+@model IList<Transaction>
+
+
+<div class="row">
+    <div class="col-xl-8">
+        <ul class="list-group list-group-flush"></ul>
+        @foreach (var trans in Model)
+        {
+            <li class="list-group-item">ID: @trans.id ------------------------------ Date: @trans.date
+                ------------------------- Tokens: @trans.tokens</li>
+        }
+        </ul>
+    </div>
+</div>

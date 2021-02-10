@@ -1,0 +1,65 @@
+@model Int32
+
+@{
+    ViewData["Title"] = "Transaction history";
+}
+
+<h1>Transaction List history</h1>
+
+<div id="history"></div>
+<hr>
+<div class="row">
+    <div class="col-xl-4">
+        <button disabled onclick="prevPage()" class='btn btn-secondary float-left' id='prev'>
+            Previous
+        </button>
+
+    </div>
+    <div class="col-xl-4">
+        <button onclick="nextPage()" class='btn btn-secondary float-right' id='next'>
+            Next
+        </button>
+    </div>
+</div>
+
+
+
+<script>
+    var transactions = parseInt(JSON.parse('@Html.Raw(Json.Serialize(Model))'));
+    var num = 0;
+    $("document").ready(function () {
+        if (transactions <= 10) $("#next").attr("disabled", true);
+        updateTransactions(num);
+    })
+
+    function updateTransactions(num) {
+        $.ajax({
+            type: "GET",
+            url: "/Transaction/getTransactions?num=" + num,
+            dataType: "text",
+            success: function (response) {
+                $("#history").html(response)
+            },
+            error: function (response) {
+                alert(response)
+            }
+        })
+    }
+
+    function nextPage() {
+        if ((num + 1) * 10 > transactions) return;
+        num++;
+        $("#prev").attr("disabled", false);
+        if ((num + 1) * 10 > transactions) $("#next").attr("disabled", true);
+        updateTransactions(num);
+    }
+
+    function prevPage() {
+        if (num == 0) return;
+        num--;
+        $("#next").attr("disabled", false);
+        if (num == 0) $("#prev").attr("disabled", true);
+        updateTransactions(num);
+    }
+
+</script>

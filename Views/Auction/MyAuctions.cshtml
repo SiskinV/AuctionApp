@@ -1,0 +1,69 @@
+@using AuctionApp.Models.Database
+@model Int32
+@{
+    ViewData["Title"] = "My auctions";
+}
+
+
+<h1>My auctions</h1>
+
+
+<script>
+    var auctions = parseInt(JSON.parse('@Html.Raw(Json.Serialize(Model))'));
+    var num = 0;
+
+    var numOfAuctions = localStorage.getItem("Num")
+
+    $("document").ready(function () {
+        if (auctions <= 12) $("#next").attr("disabled", true);
+        updateAuctions(num, numOfAuctions);
+    })
+
+
+
+    function nextPage() {
+        if ((num + 1) * numOfAuctions > auctions) return;
+        num++;
+        $("#prev").attr("disabled", false);
+        if ((num + 1) * numOfAuctions > auctions) $("#next").attr("disabled", true);
+        //connection.invoke("UpdateAuctions","all").catch(handleError)
+        updateAuctions(num);
+    }
+
+    function prevPage() {
+        if (num == 0) return;
+        num--;
+        $("#next").attr("disabled", false);
+        if (num == 0) $("#prev").attr("disabled", true);
+        //connection.invoke("UpdateAuctions","all").catch(handleError)
+        updateAuctions(num);
+    }
+
+</script>
+
+<div class="row">
+    <div class="col-xl-10" id="myAuctions">
+
+    </div>
+    <div class="col-xl-2">
+        @* <a asp-controller="Auction" asp-action="Create">
+            <button class='btn btn-primary'>
+            New auction
+            </button>
+            </a> *@
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-xl-5">
+        <button disabled onclick="prevPage()" class='btn btn-secondary float-left' id='prev'>
+            Previous
+        </button>
+
+    </div>
+    <div class="col-xl-5">
+        <button onclick="nextPage()" class='btn btn-secondary float-right' id='next'>
+            Next
+        </button>
+    </div>
+</div>

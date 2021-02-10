@@ -1,0 +1,38 @@
+@model AuctionApp.Models.Database.User
+@{
+    ViewData["Title"] = "Edit";
+}
+
+@* @section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsParital");}
+    } *@
+
+<h1 style="text-align: center;">Details</h1>
+<br />
+<div class="row">
+    <div class="col-xl-4 offset-xl-4">
+        <div class="card" style="width: 18rem;">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">@Html.DisplayNameFor(Model => Model.firstName): <label
+                        class="control-label">@Model.firstName</label></li>
+                <li class="list-group-item">@Html.DisplayNameFor(Model => Model.lastName): <label
+                        class="control-label">@Model.lastName</label></li>
+                <li class="list-group-item">@Html.DisplayNameFor(Model => Model.UserName): <label
+                        class="control-label">@Model.UserName<label></li>
+                <li class="list-group-item">@Html.DisplayNameFor(Model => Model.Email): <label
+                        class="control-label">@Model.Email</label></li>
+                <li class="list-group-item">@Html.DisplayNameFor(Model => Model.gender): <label
+                        class="control-label">@Model.gender</label></li>
+                <li class="list-group-item">@Html.DisplayNameFor(Model => Model.tokens): <label
+                        class="control-label">@Model.tokens</label></li>
+
+
+            </ul>
+            <div style="height: 55px;">
+                <a asp-controller='User' asp-action='Edit'><button type="button" class="btn btn-primary"
+                        style="margin-left: 30%; margin-top: 10px;">Edit
+                        details</button></a>
+            </div>
+        </div>
+    </div>
+</div>

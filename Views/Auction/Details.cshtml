@@ -1,0 +1,20 @@
+@model Int32
+
+@{
+    ViewData["Title"] = "Auction details";
+}
+
+<h1>Details</h1>
+
+<input id="id" value="@Model" type="hidden">
+
+<div id="details">
+
+</div>
+
+<script>
+
+    $("document").ready(function () {
+        updateDetails();
+    })
+</script>
